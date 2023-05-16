@@ -1,0 +1,48 @@
+{
+    "name": "movemoveapp/laravel-postmangen",
+    "description": "Generation of Postman collection JSON file based on performed HTTP requests during execution of PHPUnit runner",
+    "keywords": [
+        "movemoveapp",
+        "postman",
+        "postmangen",
+        "phpunit"
+    ],
+    "type": "laravel-package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gennady Sych",
+            "email": "g.sych@movemove.io",
+            "homepage": "https://movemove.io",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "MoveMoveIo\\Postmangen\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MoveMoveIo\\Postmangen\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php" : "^7.4|^8.0|^8.1",
+        "laravel/framework": "^8.37|^9.0|^10.0",
+        "ext-json": "*",
+        "phpunit/phpunit": "^10.0"
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "prefer-stable": true,
+    "extra": {
+        "laravel":{
+            "providers": [
+                "MoveMoveIo\\Postmangen\\PostmangenServiceProvider"
+            ]
+        }
+    }
+}
