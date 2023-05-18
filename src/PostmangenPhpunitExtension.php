@@ -12,7 +12,9 @@ class PostmangenPhpunitExtension implements PhpunitExtension
     public function bootstrap(Configuration $configuration, EventFacade $facade, ParameterCollection $parameters): void
     {
         $outputDir = $parameters->has('outputDir') ? $parameters->get('outputDir') : 'postman/';
-        $intermediateDir = $parameters->has('intermediateDir') ? $parameters->get('intermediateDir') : $outputDir;
+        $intermediateDir = $_ENV['POSTMANGEN_TMP'] ?: ($parameters->has('intermediateDir') ? $parameters->get('intermediateDir') : $outputDir);
+
+        $facade->registerSubscriber(new TestRunnerExecutionStartedSubscriber($intermediateDir));
         $facade->registerSubscriber(new TestRunnerExecutionFinishedSubscriber($intermediateDir, $outputDir));
     }
 }

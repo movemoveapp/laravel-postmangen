@@ -5,12 +5,13 @@ namespace MoveMoveIo\Postmangen\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use MoveMoveIo\Postmangen\PostmangenConsts;
 
 class PostmangenMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $result = $next($request);
+        $response = $next($request);
 
         if (App::environment() === 'testing') {
             $route = $request->route();
@@ -25,10 +26,15 @@ class PostmangenMiddleware
                 'headers' => $request->headers->all(),
                 'query' => $request->query(),
                 'body' => $request->all(),
+
+                'response_status_code' => $response->status(),
+                'response_status_text' => $response->statusText(),
+                'response_headers' => $response->headers->all(),
+                'response_body' => $response->getContent(),
             ];
 
             // Generate filename with current timestamp
-            $filename = 'tmp-request-' . microtime(true) . '.json';
+            $filename = PostmangenConsts::TMP_FILE_PREFIX . microtime(true) . '.json';
 
             $outputDir = trim(env('POSTMANGEN_TMP'), '/');
             if (!is_dir($outputDir)) {
@@ -39,6 +45,6 @@ class PostmangenMiddleware
             file_put_contents($outputDir . '/' . $filename, json_encode($requestInfo));
         }
 
-        return $result;
+        return $response;
     }
 }
