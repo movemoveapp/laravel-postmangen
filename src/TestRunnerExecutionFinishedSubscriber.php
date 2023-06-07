@@ -90,7 +90,7 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
             $uri = str_replace("{", "{{", $capture['uri']);
             $uri = str_replace("}", "}}", $uri);
             $uriKey = "{$capture['method']} $uri";
-            if (isset($processedUris[$uriKey])) {
+            if (isset($processedUris[$uriKey]) && !isset($capture['must_capture'])) {
                 continue;
             }
             $processedUris[$uriKey] = $uriKey;

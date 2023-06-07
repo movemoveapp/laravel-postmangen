@@ -9,4 +9,5 @@ class PostmangenConsts
     const CONFIG_CURRENT_TEST_CLASS = '__postmangen_current_test_class';
 
     const ANNOTATION_POSTMAN_COLLECTION_FOLDER = 'postmanCollectionFolder';
+    const ANNOTATION_POSTMANGEN_MUST_CAPTURE = 'postmangenMustCapture';
 }

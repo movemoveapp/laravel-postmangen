@@ -63,6 +63,10 @@ class PostmangenMiddleware
         if (!empty($postmanCollectionFolder)) {
             $requestInfo['collection_folder'] = $postmanCollectionFolder;
         }
+        $mustCapture = $this->hasMustCaptureAnnotation();
+        if ($mustCapture) {
+            $requestInfo['must_capture'] = true;
+        }
 
         return $requestInfo;
     }
@@ -102,5 +106,30 @@ class PostmangenMiddleware
         }
         $value = $methodAnnotations[PostmangenConsts::ANNOTATION_POSTMAN_COLLECTION_FOLDER];
         return is_array($value) ? $value[0] : $value;
+    }
+
+    private function hasMustCaptureAnnotation(): bool
+    {
+        $currentTestClass = config(PostmangenConsts::CONFIG_CURRENT_TEST_CLASS);
+        if (empty($currentTestClass)) {
+            return false;
+        }
+
+        $currentTestMethod = config(PostmangenConsts::CONFIG_CURRENT_TEST_CLASS_METHOD);
+        if (!empty($currentTestMethod)) {
+            $methodDocBlock = Registry::getInstance()->forMethod($currentTestClass, $currentTestMethod);
+            $methodAnnotations = $methodDocBlock->symbolAnnotations();
+            if (array_key_exists(PostmangenConsts::ANNOTATION_POSTMANGEN_MUST_CAPTURE, $methodAnnotations)) {
+                return true;
+            }
+        }
+
+        $classDocBlock = Registry::getInstance()->forClassName($currentTestClass);
+        $classAnnotations = $classDocBlock->symbolAnnotations();
+        if (array_key_exists(PostmangenConsts::ANNOTATION_POSTMANGEN_MUST_CAPTURE, $classAnnotations)) {
+            return true;
+        }
+
+        return false;
     }
 }
