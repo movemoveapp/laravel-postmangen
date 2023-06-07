@@ -78,7 +78,8 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
      */
     private function renderItems(array $captures): array
     {
-        $items = [];
+        $itemsWithoutFolder = [];
+        $itemsByFolder = [];
         $processedUris = [];
 
         foreach ($captures as $capture) {
@@ -96,15 +97,32 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
 
             $itemRequest = $this->renderRequest($capture, $uri);
             $itemResponse = $this->renderResponse($capture, $itemRequest);
-
-            $items[] = [
+            $item = [
                 'name' => $capture['route_name'] . " ($uri)",
                 'request' => $itemRequest,
                 'response' => $itemResponse,
             ];
+
+            if (isset($capture['collection_folder'])) {
+                $folderName = $capture['collection_folder'];
+                if (!isset($itemsByFolder[$folderName])) {
+                    $itemsByFolder[$folderName] = [];
+                }
+                $itemsByFolder[$folderName][] = $item;
+            } else {
+                $itemsWithoutFolder[] = $item;
+            }
         }
 
-        return $items;
+        $folders = [];
+        foreach ($itemsByFolder as $folderName => $folderItems) {
+            $folders[] = [
+                'name' => $folderName,
+                'items' => $folderItems
+            ];
+        }
+
+        return array_merge($folders, $itemsWithoutFolder);
     }
 
     /**
