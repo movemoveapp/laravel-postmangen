@@ -1,7 +1,8 @@
 <?php
 
-namespace MoveMoveIo\Postmangen;
+namespace MoveMoveIo\Postmangen\Phpunit;
 
+use MoveMoveIo\Postmangen\PostmangenConsts;
 use PHPUnit\Event\TestRunner\ExecutionFinished;
 use PHPUnit\Event\TestRunner\ExecutionFinishedSubscriber;
 
@@ -12,8 +13,8 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
 
     public function __construct(string $intermediateDir, string $outputDir)
     {
-        $this->intermediateDir = trim($intermediateDir, '/');
-        $this->outputDir = trim($outputDir, '/');
+        $this->intermediateDir = rtrim($intermediateDir, '/');
+        $this->outputDir = rtrim($outputDir, '/');
     }
 
     public function notify(ExecutionFinished $event): void
@@ -24,6 +25,9 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
     private function aggregateRequests(): void
     {
         $captures = $this->readIntermediateCaptures();
+        if (count($captures) === 0) {
+            return;
+        }
 
         $collection = $this->renderCollection($captures);
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace MoveMoveIo\Postmangen;
+namespace MoveMoveIo\Postmangen\Phpunit;
 
+use MoveMoveIo\Postmangen\PostmangenConsts;
 use PHPUnit\Event\Code\TestMethod;
 use PHPUnit\Event\Test\Prepared;
 use PHPUnit\Event\Test\PreparedSubscriber;

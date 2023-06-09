@@ -5,6 +5,8 @@ namespace MoveMoveIo\Postmangen\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use MoveMoveIo\Postmangen\Options;
+use MoveMoveIo\Postmangen\Paths;
 use MoveMoveIo\Postmangen\PostmangenConsts;
 use PHPUnit\Metadata\Annotation\Parser\DocBlock;
 use PHPUnit\Metadata\Annotation\Parser\Registry;
@@ -15,13 +17,13 @@ class PostmangenMiddleware
     {
         $response = $next($request);
 
-        if (App::environment() === 'testing') {
+        if (App::environment() === 'testing' && Options::isAllTestsRun()) {
             $requestInfo = $this->prepareRequestInfo($request, $response);
 
             // Generate filename with current timestamp
             $filename = PostmangenConsts::TMP_FILE_PREFIX . microtime(true) . '.json';
 
-            $outputDir = trim(env('POSTMANGEN_TMP'), '/');
+            $outputDir = rtrim(Paths::appBasePath(env('POSTMANGEN_TMP')), '/');
             if (!is_dir($outputDir)) {
                 mkdir($outputDir, 0777, true);
             }

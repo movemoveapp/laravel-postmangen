@@ -42,6 +42,7 @@ A также добавить секцию `<extensions>` в `phpunit.xml`:
 ```
 
 И, наконец, необходимо добавить `PostmangenMiddleware` класс самым первым в список `middleware` (`app/Http/Kernel.php`):
+
 ```injectablephp
 <?php
 
@@ -51,7 +52,7 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel
 {
     protected $middleware = [
-        \MoveMoveIo\Postmangen\Middleware\PostmangenMiddleware::class,
+        \MoveMoveIo\Postmangen\Phpunit\Phpunit\Phpunit\Phpunit\Middleware\PostmangenMiddleware::class,
         // ...
     ];
     // ...
