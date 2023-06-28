@@ -43,9 +43,13 @@ class PostmangenMiddleware
     private function prepareRequestInfo(Request $request, $response): array
     {
         $route = $request->route();
-        $controllerName = collect(explode('\\', $route->getActionName()))->last();
-        $controller = str_replace("Controller", "", $controllerName);
-        $name = $route->getName() ?? $controller;
+        if (empty($route)) {
+            $name = $request->method() . ' ' . $request->getPathInfo();
+        } else {
+            $controllerName = collect(explode('\\', $route->getActionName()))->last();
+            $controller = str_replace("Controller", "", $controllerName);
+            $name = $route->getName() ?? $controller;
+        }
         $requestInfo = [
             'uri' => '/' . $route->uri(),
             'route_name' => $name,
