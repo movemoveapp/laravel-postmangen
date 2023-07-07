@@ -22,5 +22,6 @@ class PostmangenPhpunitExtension implements PhpunitExtension
         $facade->registerSubscriber(new TestRunnerExecutionStartedSubscriber($intermediateDir));
         $facade->registerSubscriber(new TestRunnerExecutionFinishedSubscriber($intermediateDir, $outputDir));
         $facade->registerSubscriber(new TestPreparedSubscriber());
+        $facade->registerSubscriber(new TestFailedSubscriber());
     }
 }

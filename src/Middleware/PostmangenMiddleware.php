@@ -17,7 +17,7 @@ class PostmangenMiddleware
     {
         $response = $next($request);
 
-        if (App::environment() === 'testing' && Options::isAllTestsRun()) {
+        if (App::environment() === 'testing' && Options::isAllTestsRun() && Options::allTestsSucceeded()) {
             $requestInfo = $this->prepareRequestInfo($request, $response);
 
             // Generate filename with current timestamp

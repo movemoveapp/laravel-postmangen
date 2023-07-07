@@ -5,6 +5,7 @@ namespace MoveMoveIo\Postmangen;
 class Options
 {
     private bool $isFullTestBenchRun;
+    private bool $allTestsSucceeded = true;
 
     private static Options $instance;
     private static function init() {
@@ -21,6 +22,16 @@ class Options
     public static function isAllTestsRun(): bool
     {
         return self::$instance->isFullTestBenchRun;
+    }
+
+    public static function allTestsSucceeded(): bool
+    {
+        return self::$instance->allTestsSucceeded;
+    }
+
+    public static function setAllTestsSucceeded(bool $allTestsSucceeded): void
+    {
+        self::$instance->allTestsSucceeded = $allTestsSucceeded;
     }
 }
 (static function () {

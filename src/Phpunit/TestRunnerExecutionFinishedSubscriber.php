@@ -2,6 +2,7 @@
 
 namespace MoveMoveIo\Postmangen\Phpunit;
 
+use MoveMoveIo\Postmangen\Options;
 use MoveMoveIo\Postmangen\PostmangenConsts;
 use PHPUnit\Event\TestRunner\ExecutionFinished;
 use PHPUnit\Event\TestRunner\ExecutionFinishedSubscriber;
@@ -19,7 +20,9 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
 
     public function notify(ExecutionFinished $event): void
     {
-        $this->aggregateRequests();
+        if (Options::isAllTestsRun() && Options::allTestsSucceeded()) {
+            $this->aggregateRequests();
+        }
     }
 
     private function aggregateRequests(): void
@@ -69,7 +72,7 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
         return [
             'info' => [
                 'name' => $collectionName,
-                '_postman_id' => uniqid(),
+//                '_postman_id' => uniqid(),
                 'schema' => 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
             ],
             'item' => $this->renderItems($captures),
@@ -188,6 +191,9 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
     {
         $headers = [];
         foreach ($capturedHeaders as $headerName => $values) {
+            if (strtolower($headerName) == 'date') {
+                continue;
+            }
             foreach ($values as $val) {
                 $headers [] = [
                     'key' => $headerName,
