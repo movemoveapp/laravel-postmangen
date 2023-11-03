@@ -57,7 +57,7 @@ class PostmangenMiddleware
             'url' => $request->url(),
             'headers' => $request->headers->all(),
             'query' => $request->query(),
-            'body' => $request->all(),
+            'body' => $request->files->count() > 0 ? null : $request->all(),
 
             'response_status_code' => $response->status(),
             'response_status_text' => $response->statusText(),

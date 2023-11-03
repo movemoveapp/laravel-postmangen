@@ -189,9 +189,18 @@ class TestRunnerExecutionFinishedSubscriber implements ExecutionFinishedSubscrib
      */
     private function renderHeaders($capturedHeaders): array
     {
+        $ignoredHeaders = [
+            'date',
+            'content-length',
+            'user-agent',
+            'host',
+            'accept-language',
+            'accept-charset'
+        ];
+
         $headers = [];
         foreach ($capturedHeaders as $headerName => $values) {
-            if (strtolower($headerName) == 'date') {
+            if (in_array(strtolower($headerName), $ignoredHeaders)) {
                 continue;
             }
             foreach ($values as $val) {
