@@ -10,6 +10,7 @@ use MoveMoveIo\Postmangen\Paths;
 use MoveMoveIo\Postmangen\PostmangenConsts;
 use PHPUnit\Metadata\Annotation\Parser\DocBlock;
 use PHPUnit\Metadata\Annotation\Parser\Registry;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostmangenMiddleware
 {
@@ -51,7 +52,7 @@ class PostmangenMiddleware
             $name = $route->getName() ?? $controller;
         }
         $requestInfo = [
-            'uri' => '/' . $route->uri(),
+            'uri' => '/' . ($route ? $route->uri() : '<NULL>'),
             'route_name' => $name,
             'method' => $request->method(),
             'url' => $request->url(),
@@ -59,8 +60,8 @@ class PostmangenMiddleware
             'query' => $request->query(),
             'body' => $request->files->count() > 0 ? null : $request->all(),
 
-            'response_status_code' => $response->status(),
-            'response_status_text' => $response->statusText(),
+            'response_status_code' => $response->getStatusCode(),
+            'response_status_text' => Response::$statusTexts[$response->getStatusCode()],
             'response_headers' => $response->headers->all(),
             'response_body' => $response->getContent(),
         ];
